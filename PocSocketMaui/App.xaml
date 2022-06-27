@@ -9,6 +9,8 @@
           <converters:MessageSenderToGridColumnValueConverter x:Key="MessageSenderToGridColumnValueConverter"/>
           <converters:MessageSenderToBackgroundColorValueConverter x:Key="MessageSenderToBackgroundColorValueConverter"/>
           <converters:MessageSenderToTextColorValueConverter x:Key="MessageSenderToTextColorValueConverter"/>
+          <converters:ServerConnectedBoolToServerConnectedStringValueConverter x:Key="ServerConnectedBoolToServerConnectedStringValueConverter"/>
+          <converters:ServerConnectedBoolToColorValueConverter x:Key="ServerConnectedBoolToColorValueConverter"/>
 
           <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="Resources/Styles/Colors.xaml" />

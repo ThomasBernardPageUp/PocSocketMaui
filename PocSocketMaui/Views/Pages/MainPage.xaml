@@ -12,11 +12,12 @@
     <StackLayout
       Orientation="Horizontal">
       <Button
-        Text="Disconnect"
-        Command="{Binding DisconnectToServerCommand}"/>
-      <Button
-        Text="Connect"
-        Command="{Binding ConnectToServerCommand}"/>
+        TextColor="{Binding IsServerConnected, Converter={StaticResource ServerConnectedBoolToColorValueConverter}}"
+        FontAttributes="Bold"
+        BackgroundColor="Transparent"
+        Command="{Binding ChangeConnectionStateCommand}"
+        Text="{Binding IsServerConnected, Converter={StaticResource ServerConnectedBoolToServerConnectedStringValueConverter}}"/>
+
       <Button
         Text="Info"
         HorizontalOptions="EndAndExpand"

@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Net.WebSockets;
 using System.Reactive;
 using PocSocketMaui.Commons;
 using PocSocketMaui.Services.Interfaces;
@@ -19,8 +18,7 @@ public class MainViewModel : BaseViewModel
 		_socketService = socketService;
 		_alertDialogService = alertDialogService;
 
-		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand(), this.WhenAnyValue(vm => vm.IsServerConnected, isServerConnected => !isServerConnected));
-		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand(), this.WhenAnyValue(vm => vm.IsServerConnected));
+		ChangeConnectionStateCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnChangeConnectionStateCommand());
 		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
 		InformationCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnInformationCommand());
 
@@ -30,21 +28,15 @@ public class MainViewModel : BaseViewModel
 
 	#region Commands
 
-	#region ConnectToServerCommand => OnConnectToServerCommand
-	public ReactiveCommand<Unit, Task> ConnectToServerCommand { get; set; }
-	private async Task OnConnectToServerCommand()
+	#region ChangeConnectionStateCommand => OnChangeConnectionStateCommand
+	public ReactiveCommand<Unit, Task> ChangeConnectionStateCommand { get; set; }
+	private async Task OnChangeConnectionStateCommand()
 	{
-		await _socketService.ConnectToServerAsync();
-		IsServerConnected = true;
-	}
-	#endregion
-
-	#region DisconnectToServerCommand => DisconnectToServerAsync
-	public ReactiveCommand<Unit, Task> DisconnectToServerCommand { get; set; }
-	private async Task OnDisconnectToServerCommand()
-	{
-		IsServerConnected = false;
-		await _socketService.DisconnectToServerAsync();
+		if (!IsServerConnected) // If server not connected
+			await _socketService.ConnectToServerAsync();
+		else
+			await _socketService.DisconnectToServerAsync();
+		IsServerConnected = !IsServerConnected;
 	}
 	#endregion
 
