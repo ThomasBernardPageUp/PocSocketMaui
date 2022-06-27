@@ -1,7 +1,7 @@
 
 # PocSocketMaui
 
-![Image1](https://user-images.githubusercontent.com/90254070/175908485-15dcc0cd-34be-4fc7-b818-2fccade0c88e.png)
+![image](https://user-images.githubusercontent.com/90254070/175909236-5b0a8f81-c6c1-4d1e-91c0-58ccf98f33aa.png)
 
 This POC demonstrates the use of WebSockets in a .NET MAUI mobile application. We can then easily communicate between a server and a client and this live.To send messages on the server side we use the site https://socketsbay.com/test-websockets. 
 
