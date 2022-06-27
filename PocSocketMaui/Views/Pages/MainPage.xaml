@@ -6,11 +6,12 @@
              x:DataType="viewModels:MainViewModel"
              x:Class="PocSocketMaui.Views.Pages.MainPage">
 
-  <StackLayout 
-      Margin="5" 
-      VerticalOptions="Center">
-    <StackLayout
-      Orientation="Horizontal">
+  <Grid
+    Margin="5"
+    RowDefinitions="Auto, *, Auto"
+    RowSpacing="20"
+    VerticalOptions="FillAndExpand">
+    <Grid ColumnDefinitions="*, Auto">
       <Button
         TextColor="{Binding IsServerConnected, Converter={StaticResource ServerConnectedBoolToColorValueConverter}}"
         FontAttributes="Bold"
@@ -20,14 +21,11 @@
 
       <Button
         Text="Info"
-        HorizontalOptions="EndAndExpand"
+        Grid.Column="1"
         Command="{Binding InformationCommand}"/>
-    </StackLayout>
+    </Grid>
 
-
-      
-
-    <CollectionView ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand" Margin="0, 20">
+    <CollectionView ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand" Grid.Row="1">
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="wrappers:MessageWrapper">
           <Grid RowDefinitions="*, Auto" ColumnDefinitions="40, *, 40">
@@ -52,9 +50,9 @@
     </CollectionView>
 
     <Entry
+      Grid.Row="2"
       Placeholder="Message"
       Text="{Binding EntryText}"
       ReturnCommand="{Binding SendMessageCommand}"/>
-  </StackLayout>
- 
+  </Grid>
 </ContentPage>
