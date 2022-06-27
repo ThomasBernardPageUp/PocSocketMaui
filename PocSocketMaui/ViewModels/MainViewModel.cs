@@ -19,7 +19,7 @@ public class MainViewModel : BaseViewModel
 		_socketService = socketService;
 		_alertDialogService = alertDialogService;
 
-		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand());
+		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand(), this.WhenAnyValue(vm => vm.IsServerConnected, isServerConnected => !isServerConnected));
 		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand(), this.WhenAnyValue(vm => vm.IsServerConnected));
 		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
 		InformationCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnInformationCommand());

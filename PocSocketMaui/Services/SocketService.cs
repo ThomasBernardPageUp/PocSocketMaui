@@ -14,7 +14,7 @@ namespace PocSocketMaui.Services;
 
 public class SocketService : ISocketService
 {
-	private readonly ClientWebSocket _clientWebSocket = new ClientWebSocket();
+	private ClientWebSocket _clientWebSocket;
 	private readonly Uri _serverUri = new Uri(Constants.SocketServerUrl);
 	private readonly CancellationToken _cancellationToken = new CancellationToken();
 
@@ -34,11 +34,12 @@ public class SocketService : ISocketService
 
 	public async Task ConnectToServerAsync()
 	{
+		_clientWebSocket = new ClientWebSocket();
 		await _clientWebSocket.ConnectAsync(_serverUri, _cancellationToken);
 
-		await Task.Factory.StartNew(async () =>
+		await Task.Factory.StartNew(async () => // Execute the following code in other thread
 		{
-			while (true)
+			while (true) // Listen everytime
 			{
 				await ReadMessageAsync();
 			}
@@ -53,23 +54,23 @@ public class SocketService : ISocketService
 		do
 		{
 			receiveResult = await _clientWebSocket.ReceiveAsync(message, _cancellationToken);
-			if (receiveResult.MessageType != WebSocketMessageType.Text)
+			if (receiveResult.MessageType != WebSocketMessageType.Text) // Read only text
 				break;
-			var messageBytes = message.Skip(message.Offset).Take(receiveResult.Count).ToArray();
-			string receivedMessage = Encoding.UTF8.GetString(messageBytes);
-			_messagesCache.AddOrUpdate(new MessageWrapper(_messagesCache.Count, MessageSender.Server, DateTime.Now, receivedMessage));
+			var messageBytes = message.Skip(message.Offset).Take(receiveResult.Count).ToArray(); // Transform to array of byte
+			string receivedMessage = Encoding.UTF8.GetString(messageBytes); // Transform to string
+			_messagesCache.AddOrUpdate(new MessageWrapper(_messagesCache.Count, MessageSender.Server, DateTime.Now, receivedMessage)); // Add to history
 		}
 		while (!receiveResult.EndOfMessage);
 	}
 
 	public async Task<bool> SendMessageAsync(string message)
 	{
-		var byteMessage = Encoding.UTF8.GetBytes(message);
-		var segmnet = new ArraySegment<byte>(byteMessage);
+		var byteMessage = Encoding.UTF8.GetBytes(message); // Encode message
+		var segementedArray = new ArraySegment<byte>(byteMessage);
 
-		await _clientWebSocket.SendAsync(segmnet, WebSocketMessageType.Text, true, _cancellationToken);
+		await _clientWebSocket.SendAsync(segementedArray, WebSocketMessageType.Text, true, _cancellationToken);
 
-		_messagesCache.AddOrUpdate(new MessageWrapper(_messagesCache.Count, MessageSender.Client, DateTime.Now, message));
+		_messagesCache.AddOrUpdate(new MessageWrapper(_messagesCache.Count, MessageSender.Client, DateTime.Now, message)); // Add to history
 
 
 		return true;
@@ -77,6 +78,6 @@ public class SocketService : ISocketService
 
 	public async Task DisconnectToServerAsync()
 	{
-		_clientWebSocket.Dispose();
+		_clientWebSocket.Dispose(); // Close _clientWebSocket connection
 	}
 }

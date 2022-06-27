@@ -13,8 +13,10 @@
       Orientation="Horizontal">
       <Button
         Text="Disconnect"
-        HorizontalOptions="Start"
         Command="{Binding DisconnectToServerCommand}"/>
+      <Button
+        Text="Connect"
+        Command="{Binding ConnectToServerCommand}"/>
       <Button
         Text="Info"
         HorizontalOptions="EndAndExpand"
