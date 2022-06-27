@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:Toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               x:Class="PocSocketMaui.Views.Popups.AlertNullablePopupPage">
+  <Grid
+    BackgroundColor="{StaticResource White}"
+    MinimumWidthRequest="250"
+    MinimumHeightRequest="100"
+    RowDefinitions="*, 50, 50, 50">
+
+    <Label
+      x:Name="MessageLabel"
+      VerticalTextAlignment="Center"
+      HorizontalTextAlignment="Center"/>
+
+    <Button
+      Grid.Row="1"
+      CornerRadius="0"
+      x:Name="CancelButton"
+      Clicked="CancelButton_OnClicked"
+      TextColor="{StaticResource Primary}"
+      BackgroundColor="{StaticResource White}"/>
+
+    <Button
+      Grid.Row="2"
+      CornerRadius="0"
+      x:Name="ValidateButton"
+      Clicked="ValidateButton_OnClicked"
+      TextColor="{StaticResource White}"
+      BackgroundColor="{StaticResource Primary}"/>
+
+    <Button
+      Grid.Row="3"
+      CornerRadius="0"
+      x:Name="BackButton"
+      BackgroundColor="Gray"
+      Clicked="BackButton_OnClicked"
+      TextColor="{StaticResource Black}" />
+  </Grid>
+</Toolkit:Popup>
