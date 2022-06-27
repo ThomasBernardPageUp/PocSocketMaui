@@ -20,11 +20,12 @@ public class MainViewModel : BaseViewModel
 		_alertDialogService = alertDialogService;
 
 		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand());
-		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand());
+		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand(), this.WhenAnyValue(vm => vm.IsServerConnected));
 		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
 		InformationCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnInformationCommand());
 
 		_socketService.ConnectToServerAsync();
+		IsServerConnected = true;
 	}
 
 	#region Commands
@@ -34,6 +35,7 @@ public class MainViewModel : BaseViewModel
 	private async Task OnConnectToServerCommand()
 	{
 		await _socketService.ConnectToServerAsync();
+		IsServerConnected = true;
 	}
 	#endregion
 
@@ -41,6 +43,7 @@ public class MainViewModel : BaseViewModel
 	public ReactiveCommand<Unit, Task> DisconnectToServerCommand { get; set; }
 	private async Task OnDisconnectToServerCommand()
 	{
+		IsServerConnected = false;
 		await _socketService.DisconnectToServerAsync();
 	}
 	#endregion
@@ -54,19 +57,27 @@ public class MainViewModel : BaseViewModel
 	}
 	#endregion
 
+	#region InformationCommand => OnInformationCommand
 	public ReactiveCommand<Unit, Task> InformationCommand { get; set; }
 	private async Task OnInformationCommand()
 	{
 		await _alertDialogService.AlertAsync($"Server : {Constants.SocketServerUrl}", "Ok");
 	}
-
+	#endregion
 
 	#endregion
 
 	#region Properties
 
-	#region Messages
 	public ReadOnlyObservableCollection<MessageWrapper> Messages => _socketService.Messages;
+
+	#region IsServerConnected
+	private bool _isServerConnected;
+	public bool IsServerConnected
+	{
+		get => _isServerConnected;
+		set => this.RaiseAndSetIfChanged(ref _isServerConnected, value);
+	}
 	#endregion
 
 	#region EntryText
@@ -77,7 +88,6 @@ public class MainViewModel : BaseViewModel
 		set => this.RaiseAndSetIfChanged(ref _entryText, value);
 	}
 	#endregion
-
 
 	#endregion
 
