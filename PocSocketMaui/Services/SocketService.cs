@@ -64,7 +64,13 @@ public class SocketService : ISocketService
 
 	public async Task<bool> SendMessageAsync(string message)
 	{
+		var byteMessage = Encoding.UTF8.GetBytes(message);
+		var segmnet = new ArraySegment<byte>(byteMessage);
+
+		await _clientWebSocket.SendAsync(segmnet, WebSocketMessageType.Text, true, _cancellationToken);
+
 		_messagesCache.AddOrUpdate(new MessageWrapper(_messagesCache.Count, MessageSender.Client, DateTime.Now, message));
+
 
 		return true;
 	}

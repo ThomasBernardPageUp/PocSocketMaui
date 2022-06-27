@@ -5,27 +5,26 @@
              xmlns:viewModels="clr-namespace:PocSocketMaui.ViewModels"
              x:DataType="viewModels:MainViewModel"
              x:Class="PocSocketMaui.Views.Pages.MainPage">
-			 
-    <StackLayout 
+
+  <StackLayout 
       Margin="5" 
       VerticalOptions="Center">
-
-    <StackLayout Orientation="Horizontal" Spacing="5" Margin="0, 5">
-      <Button
-          Command="{Binding ConnectToServerCommand}"
-          HorizontalOptions="FillAndExpand"
-          Text="Connect"/>
-
+    <StackLayout
+      Orientation="Horizontal">
       <Button
         Text="Disconnect"
-        HorizontalOptions="FillAndExpand"
+        HorizontalOptions="Start"
         Command="{Binding DisconnectToServerCommand}"/>
+      <Button
+        Text="Info"
+        HorizontalOptions="EndAndExpand"
+        Command="{Binding InformationCommand}"/>
     </StackLayout>
 
 
       
 
-    <CollectionView ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand">
+    <CollectionView ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand" Margin="0, 20">
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="wrappers:MessageWrapper">
           <Grid RowDefinitions="*, Auto" ColumnDefinitions="40, *, 40">

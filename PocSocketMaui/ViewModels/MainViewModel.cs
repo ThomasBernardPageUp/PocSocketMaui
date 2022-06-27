@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Net.WebSockets;
 using System.Reactive;
+using PocSocketMaui.Commons;
 using PocSocketMaui.Services.Interfaces;
 using PocSocketMaui.ViewModels.Base;
 using PocSocketMaui.Wrappers;
@@ -11,13 +12,19 @@ namespace PocSocketMaui.ViewModels;
 public class MainViewModel : BaseViewModel
 {
 	private readonly ISocketService _socketService;
+	private readonly IAlertDialogService _alertDialogService;
 
-	public MainViewModel(INavigationService navigationService, ISocketService socketService) : base(navigationService)
+	public MainViewModel(INavigationService navigationService, ISocketService socketService, IAlertDialogService alertDialogService) : base(navigationService)
 	{
 		_socketService = socketService;
+		_alertDialogService = alertDialogService;
+
 		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand());
 		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand());
 		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
+		InformationCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnInformationCommand());
+
+		_socketService.ConnectToServerAsync();
 	}
 
 	#region Commands
@@ -47,6 +54,11 @@ public class MainViewModel : BaseViewModel
 	}
 	#endregion
 
+	public ReactiveCommand<Unit, Task> InformationCommand { get; set; }
+	private async Task OnInformationCommand()
+	{
+		await _alertDialogService.AlertAsync($"Server : {Constants.SocketServerUrl}", "Ok");
+	}
 
 
 	#endregion

@@ -16,7 +16,7 @@ public static class MauiProgram
 				RegisterServices(containerRegistery);
 				RegisterHelpers(containerRegistery);
 			})
-			.OnAppStart(async navigationService => await navigationService.NavigateAsync($"{nameof(NavigationPage)}/{ nameof(MainPage)}"));
+			.OnAppStart(async navigationService => await navigationService.NavigateAsync($"/{ nameof(MainPage)}"));
 		})
 		.ConfigureFonts(fonts =>
         {

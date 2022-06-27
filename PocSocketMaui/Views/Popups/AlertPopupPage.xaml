@@ -21,6 +21,7 @@
 
       <Label
         Grid.Row="1"
+        Margin="20, 0"
         Grid.ColumnSpan="2"
         x:Name="MessageLabel"
         HorizontalTextAlignment="Center"
