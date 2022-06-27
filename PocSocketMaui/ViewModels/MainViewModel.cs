@@ -1,46 +1,72 @@
+using System.Collections.ObjectModel;
+using System.Net.WebSockets;
 using System.Reactive;
 using PocSocketMaui.Services.Interfaces;
 using PocSocketMaui.ViewModels.Base;
+using PocSocketMaui.Wrappers;
 using ReactiveUI;
 
 namespace PocSocketMaui.ViewModels;
 
 public class MainViewModel : BaseViewModel
 {
-	private readonly IAlertDialogService _alertDialogService;
+	private readonly ISocketService _socketService;
 
-	public MainViewModel(INavigationService navigationService, IAlertDialogService alertDialogService) : base(navigationService)
+	public MainViewModel(INavigationService navigationService, ISocketService socketService) : base(navigationService)
 	{
-		_alertDialogService = alertDialogService;
-		ButtonCommand = ReactiveCommand.Create<string, Task>(async number => await OnButtonCommand(number));
+		_socketService = socketService;
+		ConnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnConnectToServerCommand());
+		DisconnectToServerCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnDisconnectToServerCommand());
+		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
 	}
 
+	#region Commands
 
-	public ReactiveCommand<string, Task> ButtonCommand { get; set; }
-	private async Task OnButtonCommand(string number)
+	#region ConnectToServerCommand => OnConnectToServerCommand
+	public ReactiveCommand<Unit, Task> ConnectToServerCommand { get; set; }
+	private async Task OnConnectToServerCommand()
 	{
-		switch (number)
-		{
-			case "0":
-				await _alertDialogService.AlertAsync("Message of the popup", "Ok", "Cancel", "Title");
-				break;
-			case "1":
-				await _alertDialogService.AlertAsync("Message of the popup", "Ok", "No");
-				break;
-			case "2":
-				await _alertDialogService.AlertAsync("Message of the popup", "Ok");
-				break;
-			case "3":
-				_alertDialogService.DisplayToast("This is a toast");
-				break;
-			case "4":
-				await _alertDialogService.NullableAlertAsync("Message of the popup", "Ok", "Cancel", "Goback");
-				break;
-			case "5":
-				await _alertDialogService.PromptAsync("Message of the popup", "Ok", "Cancel", "Goback", "e");
-				break;
-			default:
-				break;
-		}
+		await _socketService.ConnectToServerAsync();
 	}
+	#endregion
+
+	#region DisconnectToServerCommand => DisconnectToServerAsync
+	public ReactiveCommand<Unit, Task> DisconnectToServerCommand { get; set; }
+	private async Task OnDisconnectToServerCommand()
+	{
+		await _socketService.DisconnectToServerAsync();
+	}
+	#endregion
+
+	#region SendMessageCommand => OnSendMessageCommand
+	public ReactiveCommand<Unit, Task> SendMessageCommand { get; set; }
+	private async Task OnSendMessageCommand()
+	{
+		await _socketService.SendMessageAsync(EntryText);
+		EntryText = string.Empty;
+	}
+	#endregion
+
+
+
+	#endregion
+
+	#region Properties
+
+	#region Messages
+	public ReadOnlyObservableCollection<MessageWrapper> Messages => _socketService.Messages;
+	#endregion
+
+	#region EntryText
+	private string _entryText;
+	public string EntryText
+	{
+		get => _entryText;
+		set => this.RaiseAndSetIfChanged(ref _entryText, value);
+	}
+	#endregion
+
+
+	#endregion
+
 }

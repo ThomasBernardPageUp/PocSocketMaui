@@ -1,70 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:wrappers="clr-namespace:PocSocketMaui.Wrappers"
+             xmlns:viewModels="clr-namespace:PocSocketMaui.ViewModels"
+             x:DataType="viewModels:MainViewModel"
              x:Class="PocSocketMaui.Views.Pages.MainPage">
 			 
-    <ScrollView>
-        <VerticalStackLayout 
-            Spacing="25" 
-            Padding="30,0" 
-            VerticalOptions="Center">
+    <StackLayout 
+      Margin="5" 
+      VerticalOptions="Center">
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-                
-            <Label 
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-            
-            <Label 
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+    <StackLayout Orientation="Horizontal" Spacing="5" Margin="0, 5">
+      <Button
+          Command="{Binding ConnectToServerCommand}"
+          HorizontalOptions="FillAndExpand"
+          Text="Connect"/>
 
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="0"
-                Text="Alert 0"
-                HorizontalOptions="Center" />
+      <Button
+        Text="Disconnect"
+        HorizontalOptions="FillAndExpand"
+        Command="{Binding DisconnectToServerCommand}"/>
+    </StackLayout>
 
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="1"
-                Text="Alert 1"
-                HorizontalOptions="Center" />
 
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="2"
-                Text="Alert 2"
-                HorizontalOptions="Center" />
+      
 
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="3"
-                Text="Toast"
-                HorizontalOptions="Center" />
+    <CollectionView ItemsSource="{Binding Messages}" VerticalOptions="FillAndExpand">
+      <CollectionView.ItemTemplate>
+        <DataTemplate x:DataType="wrappers:MessageWrapper">
+          <Grid RowDefinitions="*, Auto" ColumnDefinitions="40, *, 40">
+            <Frame
+                CornerRadius="10"
+                Grid.ColumnSpan="2"
+                Padding="10"
+                Grid.Column="{Binding Sender, Converter={StaticResource MessageSenderToGridColumnValueConverter}}"
+                BackgroundColor="{Binding Sender, Converter={StaticResource MessageSenderToBackgroundColorValueConverter}}">
+              <Label
+                  Text="{Binding Content}"
+                  TextColor="{Binding Sender, Converter={StaticResource MessageSenderToTextColorValueConverter}}"/>
+            </Frame>
+            <Label
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Text="{Binding Date}"
+                Grid.Column="{Binding Sender, Converter={StaticResource MessageSenderToGridColumnValueConverter}}"/>
+          </Grid>
+        </DataTemplate>
+      </CollectionView.ItemTemplate>
+    </CollectionView>
 
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="4"
-                Text="Nullable Alert"
-                HorizontalOptions="Center" />
-
-            <Button
-                Command="{Binding ButtonCommand}"
-                CommandParameter="5"
-                Text="Prompt"
-                HorizontalOptions="Center" />
-
-    </VerticalStackLayout>
-    </ScrollView>
+    <Entry
+      Placeholder="Message"
+      Text="{Binding EntryText}"
+      ReturnCommand="{Binding SendMessageCommand}"/>
+  </StackLayout>
  
 </ContentPage>
