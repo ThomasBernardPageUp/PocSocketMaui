@@ -50,6 +50,7 @@
       <PackageReference Include="PageUpX.Core" Version="2.2.1.2" />
       <PackageReference Include="Prism.DryIoc.Maui" Version="8.1.191-beta" />
       <PackageReference Include="Prism.Maui" Version="8.1.191-beta" />
+      <PackageReference Include="PusherClient" Version="2.1.0" />
       <PackageReference Include="ReactiveUI.Maui" Version="18.1.8" />
       <PackageReference Include="Sharpnado.TaskMonitor" Version="1.0.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />

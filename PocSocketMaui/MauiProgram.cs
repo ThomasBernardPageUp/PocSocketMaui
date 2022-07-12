@@ -38,6 +38,7 @@ public static class MauiProgram
 	private static void RegisterServices(IContainerRegistry containerRegistry)
 	{
 		containerRegistry.RegisterSingleton<IAlertDialogService, CommunityToolkitAlertDialogService>();
+		//containerRegistry.RegisterSingleton<ISocketService, PusherService>();
 		containerRegistry.RegisterSingleton<ISocketService, SocketService>();
 	}
 

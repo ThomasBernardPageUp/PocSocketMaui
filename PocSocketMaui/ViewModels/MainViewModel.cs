@@ -22,8 +22,15 @@ public class MainViewModel : BaseViewModel
 		SendMessageCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnSendMessageCommand());
 		InformationCommand = ReactiveCommand.Create<Unit, Task>(async _ => await OnInformationCommand());
 
-		_socketService.ConnectToServerAsync();
+		
 		IsServerConnected = true;
+	}
+
+	protected override async Task OnNavigatedToAsync(INavigationParameters parameters)
+	{
+		await base.OnNavigatedToAsync(parameters);
+		await _socketService.ConnectToServerAsync();
+		await _socketService.ReadMessageAsync();
 	}
 
 	#region Commands
